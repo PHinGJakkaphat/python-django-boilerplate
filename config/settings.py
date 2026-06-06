@@ -40,8 +40,6 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "accounts",
-    "common",
-    "files",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -321,18 +319,6 @@ LOGGING = {
         },
         # Accounts logger — use: logging.getLogger('accounts')
         "accounts": {
-            "handlers": ["console", "django_file", "error_file"],
-            "level": "DEBUG",
-            "propagate": False,
-        },
-        # Files logger — use: logging.getLogger('files')
-        "files": {
-            "handlers": ["console", "django_file", "error_file"],
-            "level": "DEBUG",
-            "propagate": False,
-        },
-        # Common logger — use: logging.getLogger('common')
-        "common": {
             "handlers": ["console", "django_file", "error_file"],
             "level": "DEBUG",
             "propagate": False,

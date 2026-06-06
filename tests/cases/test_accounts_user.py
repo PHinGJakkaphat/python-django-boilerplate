@@ -1,10 +1,3 @@
-"""
-Example: Accounts — User creation tests.
-
-Run:
-    python manage.py test tests.cases.test_accounts_user
-"""
-
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 

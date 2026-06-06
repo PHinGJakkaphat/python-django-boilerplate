@@ -24,9 +24,6 @@ urlpatterns = [
     # Accounts
     path("accounts/", include("accounts.urls", namespace="accounts")),
 
-    # Files
-    path("files/", include("files.urls", namespace="files")),
-
     # API Documentation
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path("api/docs/redoc/", SpectacularRedocView.as_view(url_name="api-schema"), name="api-redoc"),
