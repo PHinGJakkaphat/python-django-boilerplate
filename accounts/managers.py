@@ -5,7 +5,7 @@ Custom User Manager
 import logging
 from django.contrib.auth.models import BaseUserManager
 
-logger = logging.getLogger("users")
+logger = logging.getLogger("accounts")
 
 
 class UserManager(BaseUserManager):

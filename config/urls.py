@@ -21,8 +21,11 @@ urlpatterns = [
     # Admin
     path("admin/", admin.site.urls),
 
-    # Users
-    path("users/", include("users.urls", namespace="users")),
+    # Accounts
+    path("accounts/", include("accounts.urls", namespace="accounts")),
+
+    # Files
+    path("files/", include("files.urls", namespace="files")),
 
     # API Documentation
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),

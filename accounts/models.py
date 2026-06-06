@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .managers import UserManager
 
-logger = logging.getLogger("users")
+logger = logging.getLogger("accounts")
 
 
 class User(AbstractBaseUser, PermissionsMixin):

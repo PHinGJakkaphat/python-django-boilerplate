@@ -1,0 +1,8 @@
+# fixtures — place JSON/YAML fixtures here for seeding test data
+#
+# Usage in test case:
+#   class MyTest(TestCase):
+#       fixtures = ["tests/fixtures/users.json"]
+#
+# Generate from DB:
+#   python manage.py dumpdata accounts.User --indent 2 > tests/fixtures/users.json

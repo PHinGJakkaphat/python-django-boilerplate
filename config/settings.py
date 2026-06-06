@@ -39,7 +39,9 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "users",
+    "accounts",
+    "common",
+    "files",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -98,7 +100,7 @@ DATABASES = {
 # ============================================================
 # Custom User Model
 # ============================================================
-AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "accounts.User"
 
 # ============================================================
 # Password Validation
@@ -145,7 +147,7 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "DEFAULT_PAGINATION_CLASS": "common.pagination.CustomPageNumberPagination",
     "PAGE_SIZE": 20,
 }
 
@@ -317,8 +319,20 @@ LOGGING = {
             "filters": ["require_debug_true"],
             "propagate": False,
         },
-        # Application logger — use: logging.getLogger('users')
-        "users": {
+        # Accounts logger — use: logging.getLogger('accounts')
+        "accounts": {
+            "handlers": ["console", "django_file", "error_file"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+        # Files logger — use: logging.getLogger('files')
+        "files": {
+            "handlers": ["console", "django_file", "error_file"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+        # Common logger — use: logging.getLogger('common')
+        "common": {
             "handlers": ["console", "django_file", "error_file"],
             "level": "DEBUG",
             "propagate": False,

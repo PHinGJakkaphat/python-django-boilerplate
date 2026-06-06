@@ -11,7 +11,7 @@ from django.utils.html import format_html
 from .models import User
 from .forms import UserCreationForm, UserChangeForm
 
-logger = logging.getLogger("users")
+logger = logging.getLogger("accounts")
 
 
 @admin.register(User)
