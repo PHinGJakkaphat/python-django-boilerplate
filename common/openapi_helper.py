@@ -23,6 +23,24 @@ Usage example:
     @swagger_auto_schema(**POST_CREATE_ITEM)
     def my_view(request):
         ...
+
+Examples in serializers
+───────────────────────
+If a serializer inherits from `common.serializers.BaseSerializer` or
+`BaseModelSerializer` and defines `examples` in its `class Meta`,
+those examples are **automatically** included in the generated schema —
+no extra work needed at the view level.
+
+    class UserSerializer(BaseModelSerializer):
+        class Meta:
+            model = User
+            fields = ["id", "email"]
+            examples = {
+                "Standard User": {
+                    "summary": "A regular user object",
+                    "value": {"id": 1, "email": "jane@example.com"},
+                }
+            }
 """
 
 from typing import Union, Optional
@@ -64,6 +82,31 @@ def openapi_response(
         schema = serializer_or_type
 
     return OpenApiResponse(response=schema, description=description)
+
+
+# ---------------------------------------------------------------------------
+# Internal helper — collect examples from serializer _openapi_examples
+# ---------------------------------------------------------------------------
+
+def _collect_examples(serializer_or_type) -> list:
+    """
+    Extract ``_openapi_examples`` from a serializer class or instance.
+
+    Returns an empty list if the serializer has no examples or if
+    drf_spectacular is not installed.
+    """
+    if serializer_or_type is None:
+        return []
+
+    # Resolve to class
+    if isinstance(serializer_or_type, serializers.Serializer):
+        cls = type(serializer_or_type)
+    elif isinstance(serializer_or_type, type):
+        cls = serializer_or_type
+    else:
+        return []
+
+    return list(getattr(cls, "_openapi_examples", []))
 
 
 # ---------------------------------------------------------------------------
@@ -120,6 +163,19 @@ def swagger_auto_schema(
             else:
                 normalised_responses[status_code] = value
 
+    # ── Auto-collect examples from serializers ──────────────────────────────
+    # Gather examples defined in Meta.examples on any serializer passed as
+    # request_body or as a response serializer.  Caller-supplied `examples`
+    # in **kwargs always wins (merged after, so explicit ones override).
+    auto_examples: list = []
+    auto_examples.extend(_collect_examples(request_body))
+    for value in (responses or {}).values():
+        if isinstance(value, (serializers.Serializer, type)):
+            auto_examples.extend(_collect_examples(value))
+        elif isinstance(value, OpenApiResponse):
+            # OpenApiResponse wraps a serializer in .response
+            auto_examples.extend(_collect_examples(getattr(value, "response", None)))
+
     # Build extend_schema kwargs
     schema_kwargs = {}
 
@@ -137,6 +193,11 @@ def swagger_auto_schema(
         schema_kwargs["request"] = request_body
     if query_serializer is not None:
         schema_kwargs["parameters"] = [query_serializer]
+
+    # Merge examples: auto-collected first, then explicit caller examples
+    if auto_examples:
+        existing = kwargs.pop("examples", [])
+        schema_kwargs["examples"] = auto_examples + list(existing)
 
     # Pass through any extra kwargs drf_spectacular understands
     schema_kwargs.update(kwargs)
