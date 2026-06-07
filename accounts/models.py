@@ -1,7 +1,3 @@
-"""
-Custom User Model — uses email as the primary login identifier.
-"""
-
 import logging
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
@@ -14,13 +10,6 @@ logger = logging.getLogger("accounts")
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """
-    Custom User model.
-    - Uses email as USERNAME_FIELD (instead of username)
-    - username field kept for display purposes
-    - avatar support via ImageField
-    """
-
     email = models.EmailField(_("email address"), unique=True, db_index=True)
     username = models.CharField(_("username"), max_length=150, blank=True)
     first_name = models.CharField(_("first name"), max_length=150, blank=True)

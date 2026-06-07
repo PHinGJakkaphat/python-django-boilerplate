@@ -113,8 +113,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # ============================================================
 # Internationalization
 # ============================================================
-LANGUAGE_CODE = "th"
-TIME_ZONE = config("TIME_ZONE", default="Asia/Bangkok")
+LANGUAGE_CODE = "en-us"
+TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
